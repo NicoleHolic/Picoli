@@ -1,9 +1,8 @@
-﻿
-using Client;
+﻿using Client;
 using Domain;
 using Domain.Input;
 using Domain.Messages;
-using MQTTnet;
+
 
 var client = new PicoliClient();
 
@@ -50,7 +49,7 @@ async ValueTask<bool> HandleInput(string input)
     }
     catch (Exception e)
     {
-        Console.WriteLine("ERROR: " + e.Message);
+        Console.WriteLine("!: " + e.Message);
         return false;
     }
 }
@@ -60,22 +59,28 @@ async ValueTask<bool> HandleCommand(string group, string command, Parameters par
     switch (group)
     {
         case "hi":
+        {
             return Notify(true, "Hello!");
-        
+        }
+
         case "cl":
         case "cli":
         case "client":
             return await HandleClientCommand(command, parameters);
-        
+
         case "e":
         case "exit":
+        {
             running = false;
             return Notify(true, "Shutting down...");
-        
+        }
+
         case "c":
         case "clear":
+        {
             Console.Clear();
             return true;
+        }
         
         default:
             return Notify(false, $"Command from a group '{group}' doesn't exist");
@@ -94,6 +99,7 @@ async ValueTask<bool> HandleClientCommand(string command, Parameters parameters)
             return true;
         }
         
+        case "on":
         case "con":
         case "connect":
         {
@@ -103,7 +109,17 @@ async ValueTask<bool> HandleClientCommand(string command, Parameters parameters)
             return NotifyResult(
                 await client.ConnectAsync(host, port),
                 $"Connected successfully to {host}:{port}",
-                $"Error while connection to {host}:{port}");
+                $"Error while connecting to {host}:{port}");
+        }
+        
+        case "off":
+        case "dis":
+        case "disconnect":
+        {
+            return NotifyResult(
+                await client.DisconnectAsync(),
+                $"Disconnected successfully",
+                $"Error while disconnecting");
         }
         
         case "sub":

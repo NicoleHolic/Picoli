@@ -32,18 +32,14 @@ public sealed class PicoliServer
     
     public async ValueTask<bool> StartAsync()
     {
-        if (IsStarted)
-            throw new InvalidOperationException("Server is already started");
-        
+        ThrowIfStarted();
         await MqttServer.StartAsync();
         return IsStarted;
     }
     
     public async ValueTask<bool> StopAsync()
     {
-        if (!IsStarted)
-            throw new InvalidOperationException("Server is not started");
-        
+        ThrowIfStopped();
         await MqttServer.StopAsync();
         return !IsStarted;
     }
@@ -75,5 +71,17 @@ public sealed class PicoliServer
         
         if (MessageReceived is not null)
             await MessageReceived.Invoke(message);
+    }
+    
+    private void ThrowIfStarted()
+    {
+        if (IsStarted)
+            throw new InvalidOperationException("Server is already started");
+    }
+    
+    private void ThrowIfStopped()
+    {
+        if (!IsStarted)
+            throw new InvalidOperationException("Server is not started");
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Server;
 
-public static class Command
+public static class Terminal
 {
     public static bool Run(string command)
     {
@@ -29,7 +29,7 @@ public static class Command
     }
 
 private static ProcessStartInfo GetProcessStartInfo(string command)
-        => new ProcessStartInfo()
+        => new()
         {
             FileName = "/bin/bash",
             Arguments = $"-c \"{command}\"",

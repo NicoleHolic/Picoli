@@ -13,7 +13,7 @@ public sealed class Hotspot
         if (IsRunning)
             throw new InvalidOperationException("Hotspot is already running!");
         
-        var result = await Command.RunAsync($"nmcli dev wifi hotspot ifname wlan0 ssid {Name} password {Password}");
+        var result = await Terminal.RunAsync($"nmcli dev wifi hotspot ifname wlan0 ssid {Name} password {Password}");
         IsRunning = result;
         return result;
     }
@@ -23,7 +23,7 @@ public sealed class Hotspot
         if (!IsRunning)
             throw new InvalidOperationException("Hotspot is not running!");
         
-        var result = await Command.RunAsync($"nmcli connection down hotspot");
+        var result = await Terminal.RunAsync($"nmcli connection down hotspot");
         IsRunning = !result;
         return result;
     }
