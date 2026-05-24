@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="using:App.ViewModels"
+             xmlns:services="using:App.Services"
+             xmlns:data="using:Client.Data"
+             x:Class="App.Pages.Tabs.SignalsTab"
+             x:Name="Page"
+             SafeAreaEdges="All"
+             x:DataType="viewModels:SignalsViewModel">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <services:InverseBoolConverter
+                x:Key="InverseBoolConverter" />
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid RowDefinitions="Auto,*" Padding="10">
+
+        <Grid
+            Grid.Row="0"
+            Padding="5"
+            ColumnDefinitions="*,Auto">
+
+            <Entry Grid.Column="0"
+                   Text="{Binding Search}"
+                   Margin="0, 0, 10, 0"
+                   FontSize="18"
+                   Placeholder="Search..." />
+
+            <HorizontalStackLayout Grid.Column="1" Spacing="2">
+                <Button HeightRequest="40"
+                        WidthRequest="40"
+                        Command="{Binding ToggleEditModeCommand}"
+                        ImageSource="edit.png" />
+                
+                <Button HeightRequest="40"
+                        WidthRequest="40"
+                        Command="{Binding CreateCommand}"
+                        ImageSource="plus.png" />
+            </HorizontalStackLayout>
+
+        </Grid>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Signals}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical"
+                                   ItemSpacing="2" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="data:Signal">
+
+                    <Border
+                        Padding="10"
+                        StrokeShape="RoundRectangle 12">
+
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Image
+                                Grid.Column="0"
+                                Source="signals.png"
+                                Aspect="AspectFit"
+                                HeightRequest="50"
+                                Margin="0, 0, 10, 0" />
+
+                            <VerticalStackLayout Grid.Column="1">
+
+                                <Label Text="{Binding Display}"
+                                       FontSize="18"
+                                       TextColor="{StaticResource White}" />
+
+                                <Label Text="{Binding Name}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+
+                                <Label Text="{Binding Receiver}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+
+                            </VerticalStackLayout>
+
+                            <HorizontalStackLayout Grid.Column="2" Spacing="2">
+                                
+                                <Button
+                                    HeightRequest="40"
+                                    Text="Invoke"
+                                    Command="{Binding Source={x:Reference Page}, 
+                                    Path=BindingContext.InvokeCommand}"
+                                    CommandParameter="{Binding .}"
+                                    />
+                                
+                                <Button
+                                    IsVisible="{Binding Source={x:Reference Page}, 
+                                    Path=BindingContext.Editing}"
+                                    HeightRequest="40"
+                                    WidthRequest="40"
+                                    Command="{Binding Source={x:Reference Page}, 
+                                    Path=BindingContext.DeleteCommand}"
+                                    CommandParameter="{Binding .}"
+                                    ImageSource="remove.png" />
+                            
+                                <Button
+                                    IsVisible="{Binding Source={x:Reference Page}, 
+                                    Path=BindingContext.Editing, 
+                                    Converter={StaticResource InverseBoolConverter}}"
+                                    HeightRequest="40"
+                                    WidthRequest="40"
+                                    Command="{Binding Source={x:Reference Page}, 
+                                    Path=BindingContext.EditCommand}"
+                                    CommandParameter="{Binding .}"
+                                    ImageSource="edit.png" />
+                                
+                            </HorizontalStackLayout>
+                        </Grid>
+
+                    </Border>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+    
+</ContentPage>

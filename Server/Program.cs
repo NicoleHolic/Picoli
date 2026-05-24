@@ -1,5 +1,7 @@
-﻿using Domain;
+﻿using System.Net;
+using Domain;
 using Domain.Input;
+using Domain.Messages;
 using Server;
 
 
@@ -18,8 +20,10 @@ server.MessageReceived += async message =>
     var topic = message.Topic;
     var content = message.Parameters;
 
-    Console.WriteLine($"{sender} -> {receiver}: ({topic}) {content}");
+    Console.WriteLine($"[{message.PublishedAt}] {sender} -> {receiver}: ({topic}) {content}");
 };
+
+await HandleInitialArguments();
 
 var running = true;
 
@@ -75,9 +79,28 @@ async ValueTask<bool> HandleCommand(string group, string command, Parameters par
         case "server":
             return await HandleServerCommand(command, parameters);
 
+        case "i":
+        case "info":
+        {
+            Console.WriteLine("Hotspot:");
+            Console.WriteLine($"-> Running: {hotspot.IsRunning}");
+            Console.WriteLine($"-> Name: {hotspot.Name}");
+            Console.WriteLine($"-> Password: {hotspot.Password}");
+            Console.WriteLine("Server:");
+            Console.WriteLine($"-> Running: {server.IsStarted}");
+            var ips = Dns.GetHostAddresses(Dns.GetHostName())
+                .Where(a => a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+            Console.WriteLine($"-> Ip: {string.Join(", ", ips)}");
+            Console.WriteLine($"-> Port: {server.Port}");
+            return true;
+        }
+        
         case "e":
         case "exit":
         {
+            if (hotspot.IsRunning) await hotspot.StopAsync();
+            if (server.IsStarted) await server.StopAsync();
+            
             running = false;
             return Notify(true, "Shutting down...");
         }
@@ -102,7 +125,7 @@ async ValueTask<bool> HandleHotspotCommand(string command, Parameters parameters
         {
             return NotifyResult(
                 await hotspot.StartAsync(), 
-                "Hotspot is started successfully",
+                "Hotspot started successfully",
                 "Error while starting the hotspot");
         }
         
@@ -110,8 +133,17 @@ async ValueTask<bool> HandleHotspotCommand(string command, Parameters parameters
         {
             return NotifyResult(
                 await hotspot.StopAsync(), 
-                "Hotspot is stopped successfully",
+                "Hotspot stopped successfully",
                 "Error while stopping the hotspot");
+        }
+        
+        case "c":
+        case "clear":
+        {
+            return NotifyResult(
+                await hotspot.ClearAsync(), 
+                "Hotspot configuration cleared successfully",
+                "Error while clearing hotspot configuration");
         }
         
         case "rs":
@@ -119,7 +151,7 @@ async ValueTask<bool> HandleHotspotCommand(string command, Parameters parameters
         {
             return NotifyResult(
                 await hotspot.RestartAsync(), 
-                "Hotspot is restarted successfully",
+                "Hotspot restarted successfully",
                 "Error while restarting the hotspot");
         }
 
@@ -151,7 +183,7 @@ async ValueTask<bool> HandleServerCommand(string command, Parameters parameters)
         {
             return NotifyResult(
                 await server.StartAsync(), 
-                $"Server is started successfully",
+                $"Server started successfully",
                 $"Error while starting the server");
         }
 
@@ -159,13 +191,77 @@ async ValueTask<bool> HandleServerCommand(string command, Parameters parameters)
         {
             return NotifyResult(
                 await server.StopAsync(), 
-                $"Server is stopped successfully",
+                $"Server stopped successfully",
                 $"Error while stopping the server");
+        }
+        
+        case "p":
+        case "pub":
+        case "publish":
+        {
+            var content = parameters.At(0, "Hello from server");
+            var topic = parameters.At(1, Constants.Messages.MESSAGE_TOPIC);
+
+            var message = new Message()
+            {
+                Id = Guid.CreateVersion7(),
+                PublishedAt = DateTime.Now,
+                Topic = topic,
+                Parameters = content,
+                Receiver = Constants.Messages.RECEIVER_ALL,
+                Sender = Constants.Messages.RECEIVER_SERVER,
+            };
+
+            return NotifyResult(
+                await server.PublishAsync(message), 
+                $"Message published successfully ({message.Id})",
+                $"Error while publishing the message ({message.Id})");
+        }
+        
+        case "s":
+        case "se":
+        case "send":
+        {
+            var receiver = parameters.At(0, Constants.Messages.RECEIVER_ALL);
+            var content = parameters.At(1, "Hello from server");
+            var topic = parameters.At(2, Constants.Messages.MESSAGE_TOPIC);
+
+            var message = new Message()
+            {
+                Id = Guid.CreateVersion7(),
+                PublishedAt = DateTime.Now,
+                Topic = topic,
+                Parameters = content,
+                Receiver = receiver,
+                Sender = Constants.Messages.RECEIVER_SERVER,
+            };
+
+            return NotifyResult(
+                await server.PublishAsync(message), 
+                $"Message send to {receiver} successfully ({message.Id})",
+                $"Error while sending the message to {receiver} ({message.Id})");
         }
         
         default:
             return Notify(false, $"Command '{command}' doesn't match to any command from Server group");
     };
+}
+
+async ValueTask HandleInitialArguments()
+{
+    var parameters = new Parameters(args);
+
+    if (parameters.Contains("hotspot", "hs"))
+        NotifyResult(
+            await hotspot.StartAsync(), 
+            "Hotspot started successfully",
+            "Error while starting the hotspot");
+    
+    if (parameters.Contains("server", "ser"))
+        NotifyResult(
+            await server.StartAsync(), 
+            $"Server started successfully",
+            $"Error while starting the server");
 }
 
 bool Notify(bool value, string message)

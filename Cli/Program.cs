@@ -1,10 +1,16 @@
-﻿using Client;
+﻿using Cli;
+using Client;
+using Client.Data;
 using Domain;
 using Domain.Input;
 using Domain.Messages;
 
 
 var client = new PicoliClient();
+var bindings = new Bindings();
+var handler = new MessageHandler(bindings);
+
+await bindings.LoadAsync();
 
 client.MessageReceived += async message =>
 {
@@ -13,8 +19,10 @@ client.MessageReceived += async message =>
     var topic = message.Topic;
     var content = message.Parameters;
 
-    Console.WriteLine($"{sender} -> {receiver}: ({topic}) {content}");
+    Console.WriteLine($"[{message.PublishedAt}] {sender} -> {receiver}: ({topic}) {content}");
 };
+
+client.MessageReceived += handler.HandleMessage;
 
 var running = true;
 
@@ -67,6 +75,11 @@ async ValueTask<bool> HandleCommand(string group, string command, Parameters par
         case "cli":
         case "client":
             return await HandleClientCommand(command, parameters);
+        
+        case "b":
+        case "bin":
+        case "bindings":
+            return await HandleBindingsCommand(command, parameters);
 
         case "e":
         case "exit":
@@ -192,6 +205,58 @@ async ValueTask<bool> HandleClientCommand(string command, Parameters parameters)
                 $"Error while sending the message to {receiver} ({message.Id})");
         }
         
+        default:
+            return Notify(false, $"Command '{command}' doesn't match to any command from Client group");
+    };
+}
+
+async ValueTask<bool> HandleBindingsCommand(string command, Parameters parameters)
+{
+    switch (command)
+    {
+        case "l":
+        case "list":
+        {
+            foreach (var binding in bindings)
+                Console.WriteLine($"{binding.Display}: {binding.Name} -> {binding.Type} ({binding.Parameters})");
+            
+            return true;
+        }
+        
+        case "a":
+        case "add":
+        {
+            var display = parameters.At(0, nameof(Binding));
+            var name = parameters.At(1, nameof(Binding));
+            var type = parameters.AtEnum(2, SignalType.Alert);
+            var parameter = parameters.Rest(3, nameof(Binding.Parameters));
+
+            var binding = new Binding()
+            {
+                Id = Guid.CreateVersion7(),
+                Display = display,
+                Name = name,
+                Type = type,
+                Parameters = parameter,
+            };
+
+            await bindings.AddAsync(binding);
+            
+            return Notify(true, 
+                $"Successfully added binding {binding.Display}");
+        }
+        
+        case "r":
+        case "remove":
+        {
+            var display = parameters.At(0, nameof(Binding));
+            
+            await bindings.RemoveAsync(display);
+            
+            return Notify(true, 
+                $"Successfully removed binding {display}");
+        }
+            
         default:
             return Notify(false, $"Command '{command}' doesn't match to any command from Client group");
     };

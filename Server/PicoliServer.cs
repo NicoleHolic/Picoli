@@ -50,6 +50,20 @@ public sealed class PicoliServer
         await StartAsync();
         return IsStarted;
     }
+
+    public async ValueTask<bool> PublishAsync(Message message)
+    {
+        var mqttMessage = new MqttApplicationMessageBuilder()
+            .WithTopic(message.Topic)
+            .WithPayload(JsonConvert.SerializeObject(message))
+            .Build();
+        
+        await MqttServer.InjectApplicationMessage(
+            new InjectedMqttApplicationMessage(mqttMessage)
+            );
+
+        return true;
+    }
     
     
     private async Task OnInterceptingPublishAsync(InterceptingPublishEventArgs arg)

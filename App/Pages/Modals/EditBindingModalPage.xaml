@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App.Pages.Modals.EditBindingModalPage"
+             >
+    
+    <VerticalStackLayout Padding="10" Spacing="5">
+        <Entry x:Name="DisplayEntry" Placeholder="Display Name..." />
+        
+        <Entry x:Name="NameEntry" Placeholder="Signal Name..." />
+        
+        <Picker
+            x:Name="TypePicker" />
+        
+        <Entry x:Name="ParametersEntry" Placeholder="Parameters..." />
+        
+        <HorizontalStackLayout Spacing="2">
+            <Button Text="Confirm" Clicked="Button_ConfirmClicked"/>
+            
+            <Button Text="Cancel" Clicked="Button_CancelClicked"/>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

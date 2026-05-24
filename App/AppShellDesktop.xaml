@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="App.AppShellDesktop"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="using:App.Pages"
+    xmlns:tabs="using:App.Pages.Tabs"
+    Title="Picoli System"
+    FlyoutBehavior="Locked"
+    FlyoutWidth="250">
+    
+    <ShellContent
+        Route="MainPage"
+        FlyoutItemIsVisible="False"
+        ContentTemplate="{DataTemplate pages:ConnectionPage}"/>
+    
+    <FlyoutItem Title="Signals" Icon="signals.png">
+        <ShellContent
+            Route="SignalsTab"
+            ContentTemplate="{DataTemplate tabs:SignalsTab}"/>
+    </FlyoutItem>
+    
+    <FlyoutItem Title="Bindings" Icon="bindings.png">
+        <ShellContent
+            Route="BindingsTab"
+            ContentTemplate="{DataTemplate tabs:BindingsTab}"/>
+    </FlyoutItem>
+    
+    <FlyoutItem Title="Settings" Icon="settings.png">
+        <ShellContent
+            Route="SettingsTab"
+            ContentTemplate="{DataTemplate tabs:SettingsTab}"/>
+    </FlyoutItem>
+    
+    <MenuItem 
+        Text="Log Out" 
+        IconImageSource="logout.png"
+        Clicked="OnLogoutClicked">
+    </MenuItem>
+    
+    
+
+</Shell>

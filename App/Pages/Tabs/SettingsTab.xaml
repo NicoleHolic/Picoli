@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="using:App.ViewModels"
+             x:Class="App.Pages.Tabs.SettingsTab"
+             SafeAreaEdges="All" x:DataType="viewModels:SettingsViewModel">
+    
+    <VerticalStackLayout Padding="10">
+        
+        <Image 
+            HeightRequest="100"
+            Source="picoli.png"
+            HorizontalOptions="Center"/>
+        
+        <Label
+            Text="{Binding ClientName}"
+            FontSize="24"
+            HorizontalOptions="Center"
+            />
+        
+        <Grid ColumnDefinitions="*,Auto,*"
+              Grid.Row="0"
+              Grid.ColumnSpan="2"
+              VerticalOptions="Center"
+              Margin="0,20">
+
+            <BoxView
+                Grid.Column="0"
+                HeightRequest="1"
+                BackgroundColor="Gray"
+                VerticalOptions="Center" />
+
+            <Label
+                Grid.Column="1"
+                Text="Client"
+                Margin="10,0"
+                TextColor="Gray"
+            />
+
+            <BoxView
+                Grid.Column="2"
+                HeightRequest="1"
+                BackgroundColor="Gray"
+                VerticalOptions="Center" />
+
+        </Grid>
+        
+        <Grid ColumnDefinitions="2*,1*">
+            <Label Text="Client Name" VerticalOptions="Center"/>
+            <Entry Grid.Column="1" Margin="2" Text="{Binding  ClientName}"/>
+        </Grid>
+        
+        <Grid ColumnDefinitions="2*,1*">
+            <Label Text="Default Message Channel" VerticalOptions="Center"/>
+            <Entry Grid.Column="1" Margin="2" Text="{Binding  MessageChannel}"/>
+        </Grid>
+        
+        <Grid ColumnDefinitions="*,Auto,*"
+              Grid.Row="2"
+              Grid.ColumnSpan="2"
+              VerticalOptions="Center"
+              Margin="0,20">
+
+            <BoxView
+                Grid.Column="0"
+                HeightRequest="1"
+                BackgroundColor="Gray"
+                VerticalOptions="Center" />
+
+            <Label
+                Grid.Column="1"
+                Text="Connection"
+                Margin="10,0"
+                TextColor="Gray"
+            />
+
+            <BoxView
+                Grid.Column="2"
+                HeightRequest="1"
+                BackgroundColor="Gray"
+                VerticalOptions="Center" />
+
+        </Grid>
+        
+        <Grid ColumnDefinitions="2*,1*">
+            <Label Text="Default Ip Address" VerticalOptions="Center"/>
+            <Entry Grid.Column="1" Margin="2" Text="{Binding  DefaultIp}"/>
+        </Grid>
+        
+        <Grid ColumnDefinitions="2*,1*">
+            <Label Text="Default Port" VerticalOptions="Center"/>
+            <Entry Grid.Column="1" Margin="2" Text="{Binding  DefaultPort}"/>
+        </Grid>
+        
+        <Button
+            Text="Save"
+            HorizontalOptions="Start"
+            Command="{Binding SaveCommand}"/>
+
+    </VerticalStackLayout>
+</ContentPage>

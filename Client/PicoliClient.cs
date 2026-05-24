@@ -113,7 +113,7 @@ public sealed class PicoliClient : IMessagePublisher
             throw new InvalidOperationException("Client is not connected");
     }
 
-    private string GenerateClientName()
+    public static string GenerateClientName()
     {
         return $"Picoli_{Random.Shared.Next(100, 1000)}";
     }

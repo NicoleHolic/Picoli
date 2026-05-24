@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App.Pages.ConnectionPage">
+    
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="20">
+            <Image
+                Margin="0, 20, 0, 0"
+                Source="picoli.png"
+                HeightRequest="150"
+                Aspect="AspectFit"
+                />
+
+            <Label
+                Text="Welcome to Picoli System"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <Label
+                Text="Connect to your Picoli here"
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level2"
+                />
+
+            <Grid ColumnDefinitions="3*,1*">
+                <Entry
+                    Grid.Column="0"
+                    Margin="0, 0, 5, 0"
+                    x:Name="IpInput"
+                    Text="127.0.0.1"
+                    Placeholder="127.0.0.1"
+                    HorizontalOptions="Fill"
+                />
+                <Entry
+                    Grid.Column="1"
+                    x:Name="PortInput"
+                    Text="1883"
+                    Placeholder="1883"
+                    HorizontalOptions="Fill"
+                />
+            </Grid>
+            
+            <Button
+                x:Name="ConnectButton"
+                Text="Connect" 
+                Clicked="OnConnectClicked"
+                HorizontalOptions="Fill" />
+            
+            <Button
+                x:Name="DebugModeButton"
+                Text="Debug Mode" 
+                Clicked="OnDebugModeClicked"
+                HorizontalOptions="Fill" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

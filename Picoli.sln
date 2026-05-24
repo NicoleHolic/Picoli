@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{A063D9F6-131C-4E8A-9EDB-515CC37744DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{6A5B0FC9-7253-4CF9-9AC4-1C81CF197E14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "Cli\Cli.csproj", "{01D05F46-E02B-4B02-9D8B-1177506A97DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{A063D9F6-131C-4E8A-9EDB-515CC37744DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A063D9F6-131C-4E8A-9EDB-515CC37744DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A063D9F6-131C-4E8A-9EDB-515CC37744DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A5B0FC9-7253-4CF9-9AC4-1C81CF197E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A5B0FC9-7253-4CF9-9AC4-1C81CF197E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A5B0FC9-7253-4CF9-9AC4-1C81CF197E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A5B0FC9-7253-4CF9-9AC4-1C81CF197E14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01D05F46-E02B-4B02-9D8B-1177506A97DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01D05F46-E02B-4B02-9D8B-1177506A97DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01D05F46-E02B-4B02-9D8B-1177506A97DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01D05F46-E02B-4B02-9D8B-1177506A97DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

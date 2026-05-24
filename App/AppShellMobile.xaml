@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="App.AppShellMobile"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="using:App.Pages"
+    xmlns:tabs="using:App.Pages.Tabs"
+    Title="Picoli System">
+    
+    <ShellContent
+        Route="MainPage"
+        FlyoutItemIsVisible="False"
+        ContentTemplate="{DataTemplate pages:ConnectionPage}"/>
+    
+    <TabBar
+        Route="HomePage">
+        
+        <Tab Title="Signals" Icon="signals.png">
+            <ShellContent
+                Route="SignalsTab"
+                ContentTemplate="{DataTemplate tabs:SignalsTab}"/>
+        </Tab>
+        
+        <Tab Title="Bindings" Icon="bindings.png">
+            <ShellContent
+                Route="BindingsTab"
+                ContentTemplate="{DataTemplate tabs:BindingsTab}"/>
+        </Tab>
+        
+        <Tab Title="Settings" Icon="settings.png">
+            <ShellContent
+                Route="SettingsTab"
+                ContentTemplate="{DataTemplate tabs:SettingsTab}"/>
+        </Tab>
+    </TabBar>
+</Shell>
